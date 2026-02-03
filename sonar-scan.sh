@@ -393,6 +393,9 @@ run_scan() {
         echo -e "${NEON_GREEN}║${NC}  ${WHITE}View results:${NC}                                             ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}  ${NEON_CYAN}${SONAR_HOST}/dashboard?id=${project_key}${NC}"
         echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC}  ${WHITE}Login:${NC}     ${NEON_YELLOW}admin${NC}"
+        echo -e "${NEON_GREEN}║${NC}  ${WHITE}Password:${NC}  ${NEON_YELLOW}Sonarscanner1!${NC}"
+        echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
     else
         echo -e "${RED}╔══════════════════════════════════════════════════════════════╗${NC}"
@@ -427,8 +430,7 @@ download_issues() {
     echo -e "${NEON_YELLOW}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
-    local TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-    local OUTPUT_FILE="${target_dir}/sonar-issues-${project_key}-${TIMESTAMP}.json"
+    local OUTPUT_FILE="${target_dir}/sonar-issues-${project_key}.json"
     local TEMP_FILE=$(mktemp)
     
     local PAGE=1
@@ -492,13 +494,14 @@ print(f'{len(issues)}|{total}')
     # Create final JSON
     python3 -c "
 import json
+from datetime import datetime
 
 with open('$TEMP_FILE', 'r') as f:
     issues = json.load(f)
 
 output = {
     'project': '$project_key',
-    'exportDate': '$TIMESTAMP',
+    'exportDate': datetime.now().isoformat(),
     'totalIssues': len(issues),
     'issues': issues
 }
