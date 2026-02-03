@@ -148,43 +148,8 @@
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### **METHOD 1: Quick Install (Recommended)**
-
 ```bash
-# Clone the repo
-git clone https://github.com/utajum/sonar-scanner.git
-cd sonar-scanner
-
-# Install to system
-sudo ./install.sh --install
-
-# Verify installation
-sonar-scan --help
-```
-
-### **METHOD 2: Interactive Installation**
-
-```bash
-git clone https://github.com/utajum/sonar-scanner.git
-cd sonar-scanner
-
-# Launch interactive installer
-sudo ./install.sh
-
-# Follow the on-screen prompts
-# Select [1] INSTALL
-```
-
-### **METHOD 3: Manual Install**
-
-```bash
-# For those who prefer manual control
-git clone https://github.com/utajum/sonar-scanner.git
-cd sonar-scanner
-
-# Copy directly
-sudo cp sonar-scan.sh /usr/local/bin/sonar-scan
-sudo chmod +x /usr/local/bin/sonar-scan
+curl -fsSL https://raw.githubusercontent.com/utajum/sonar-scanner/refs/heads/master/install.sh | sudo bash
 ```
 
 ---
