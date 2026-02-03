@@ -146,6 +146,7 @@ show_help() {
     echo -e "${NEON_CYAN}║${NC}    ${WHITE}-s, --scan${NC}        Run vulnerability scan ${DIM}(default action)${NC}              ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}    ${WHITE}-d, --download${NC}    Download all issues to JSON file                      ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}    ${WHITE}-t, --target${NC}      Specify target directory ${DIM}(default: current dir)${NC}     ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}    ${WHITE}--delete-images${NC}   Remove SonarQube Docker images                        ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}    ${WHITE}-q, --quiet${NC}       Minimal output mode                                   ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}    ${WHITE}-h, --help${NC}        Display this help message                             ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}    ${WHITE}-v, --version${NC}     Display version information                           ${NEON_CYAN}║${NC}"
@@ -187,6 +188,9 @@ show_menu() {
     echo -e "${NEON_CYAN}║${NC}   ${NEON_YELLOW}[2]${NC}  ${WHITE}▸▸▸${NC}  DOWNLOAD ALL ISSUES                          ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}        ${DIM}Export issues to JSON file${NC}                         ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}   ${NEON_ORANGE}[3]${NC}  ${WHITE}▸▸▸${NC}  DELETE DOCKER IMAGES                         ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}        ${DIM}Remove SonarQube Docker images${NC}                     ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}   ${RED}[Q]${NC}  ${WHITE}▸▸▸${NC}  EXIT                                         ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
@@ -197,6 +201,7 @@ show_menu() {
     case "$MENU_CHOICE" in
         1) ACTION="scan" ;;
         2) ACTION="download" ;;
+        3) ACTION="delete-images" ;;
         q|Q) 
             echo ""
             cyber_echo "INFO" "Exiting. Goodbye!"
@@ -523,6 +528,58 @@ with open('$OUTPUT_FILE', 'w') as f:
     echo -e "${NEON_GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
 }
 
+delete_docker_images() {
+    echo ""
+    echo -e "${NEON_ORANGE}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${NEON_ORANGE}║${NC}            ${BOLD}D O C K E R   I M A G E   C L E A N U P${NC}             ${NEON_ORANGE}║${NC}"
+    echo -e "${NEON_ORANGE}╠══════════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${NEON_ORANGE}║${NC}                                                              ${NEON_ORANGE}║${NC}"
+    echo -e "${NEON_ORANGE}║${NC}  ${WHITE}MODE:${NC}  ${NEON_PURPLE}REMOVE SONARQUBE DOCKER IMAGES${NC}"
+    echo -e "${NEON_ORANGE}║${NC}                                                              ${NEON_ORANGE}║${NC}"
+    echo -e "${NEON_ORANGE}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Stop and remove sonarqube container if running
+    cyber_echo "PURGE" "Checking for running SonarQube container..."
+    if docker ps -a --format '{{.Names}}' | grep -q '^sonarqube$'; then
+        cyber_echo "PURGE" "Stopping and removing sonarqube container..."
+        docker rm -f sonarqube >/dev/null 2>&1 && \
+            cyber_echo "DONE" "Removed sonarqube container" || \
+            cyber_echo "WARN" "Failed to remove sonarqube container"
+    else
+        cyber_echo "INFO" "No sonarqube container found"
+    fi
+    
+    # Remove sonarqube image
+    cyber_echo "PURGE" "Checking for sonarqube:latest image..."
+    if docker images --format '{{.Repository}}:{{.Tag}}' | grep -q '^sonarqube:latest$'; then
+        cyber_echo "PURGE" "Removing sonarqube:latest image..."
+        docker rmi sonarqube:latest >/dev/null 2>&1 && \
+            cyber_echo "DONE" "Removed sonarqube:latest image" || \
+            cyber_echo "WARN" "Failed to remove sonarqube:latest image"
+    else
+        cyber_echo "INFO" "sonarqube:latest image not found"
+    fi
+    
+    # Remove sonar-scanner-cli image
+    cyber_echo "PURGE" "Checking for sonar-scanner-cli image..."
+    if docker images --format '{{.Repository}}' | grep -q '^sonarsource/sonar-scanner-cli$'; then
+        cyber_echo "PURGE" "Removing sonarsource/sonar-scanner-cli image..."
+        docker rmi sonarsource/sonar-scanner-cli >/dev/null 2>&1 && \
+            cyber_echo "DONE" "Removed sonarsource/sonar-scanner-cli image" || \
+            cyber_echo "WARN" "Failed to remove sonar-scanner-cli image"
+    else
+        cyber_echo "INFO" "sonar-scanner-cli image not found"
+    fi
+    
+    echo ""
+    echo -e "${NEON_GREEN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
+    echo -e "${NEON_GREEN}║${NC}  ${BOLD}DOCKER CLEANUP COMPLETE${NC}                                   ${NEON_GREEN}║${NC}"
+    echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
+    echo -e "${NEON_GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
+}
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  A R G U M E N T   P A R S I N G
 # ══════════════════════════════════════════════════════════════════════════════
@@ -552,6 +609,10 @@ parse_args() {
             -v|--version)
                 show_version
                 exit 0
+                ;;
+            --delete-images|--cleanup)
+                ACTION="delete-images"
+                shift
                 ;;
             -*)
                 cyber_echo "FAIL" "Unknown option: $1"
@@ -601,8 +662,12 @@ main() {
     
     # Run checks
     check_docker
-    check_sonarqube
-    authenticate
+    
+    # Skip SonarQube checks for delete-images action
+    if [ "$ACTION" != "delete-images" ]; then
+        check_sonarqube
+        authenticate
+    fi
     
     # Execute action
     case "$ACTION" in
@@ -611,6 +676,9 @@ main() {
             ;;
         download)
             download_issues "$TARGET_DIR"
+            ;;
+        delete-images)
+            delete_docker_images
             ;;
         *)
             cyber_echo "FAIL" "Unknown action: $ACTION"
