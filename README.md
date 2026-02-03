@@ -29,15 +29,15 @@
 ![Bash](https://img.shields.io/badge/BASH-5.0+-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)
 ![SonarQube](https://img.shields.io/badge/SONARQUBE-HUNTER-4E9BCD?style=for-the-badge&logo=sonarqube&logoColor=white)
 
-![Hack The Planet](https://img.shields.io/badge/HACK-THE%20PLANET-ff0000?style=for-the-badge&logo=hackaday&logoColor=white)
-![Cyberpunk](https://img.shields.io/badge/AESTHETIC-CYBERPUNK-ff00ff?style=for-the-badge&logo=matrix&logoColor=white)
+![Style](https://img.shields.io/badge/STYLE-RETRO%20TERMINAL-ff00ff?style=for-the-badge&logo=matrix&logoColor=white)
 ![Zero Setup](https://img.shields.io/badge/SETUP-ZERO%20CONFIG-00ffff?style=for-the-badge&logo=lightning&logoColor=black)
+![Works](https://img.shields.io/badge/IT%20JUST-WORKS-ff0000?style=for-the-badge&logo=checkmarx&logoColor=white)
 
 ---
 
-**`>> JACK IN >> SCAN CODE >> ELIMINATE VULNERABILITIES >> JACK OUT >>`**
+**`>> RUN COMMAND >> SCAN CODE >> GET RESULTS >> DONE >>`**
 
-*A zero-configuration SonarQube scanner for the elite netrunner who doesn't have time for corporate setup wizards.*
+*A zero-configuration SonarQube scanner for developers who don't have time for setup wizards.*
 
 ---
 
@@ -59,27 +59,25 @@
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-> *"In the neon-lit sprawl of the digital frontier, where megacorps guard their
-> codebases with ICE and black ICE, one tool cuts through the noise. One scanner
-> finds the vulnerabilities they don't want you to see. This is **SONAR-SCANNER**."*
+> *Run a single command. Get a full code quality report. No configuration needed.*
 
 ---
 
-## `◢◤ WHAT IS THIS NEURAL INTERFACE? ◢◤`
+## `◢◤ WHAT IS THIS? ◢◤`
 
-**SONAR-SCANNER** is a weaponized wrapper around SonarQube that does one thing and does it **RUTHLESSLY WELL**:
+**SONAR-SCANNER** is a wrapper around SonarQube that makes code scanning effortless:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                                                                             │
 │   ▸ Point it at ANY directory                                               │
-│   ▸ It spins up SonarQube if needed                                         │
-│   ▸ Authenticates automatically                                             │
-│   ▸ PURGES old scan data (fresh results every time)                         │
-│   ▸ Scans your entire codebase for vulnerabilities                          │
+│   ▸ Spins up SonarQube automatically if needed                              │
+│   ▸ Handles authentication for you                                          │
+│   ▸ Clears old scan data (fresh results every time)                         │
+│   ▸ Scans your entire codebase for issues                                   │
 │   ▸ Delivers results to your local SonarQube dashboard                      │
 │                                                                             │
-│   NO CONFIGURATION. NO SETUP WIZARDS. NO CORPORATE BS.                      │
+│   NO CONFIGURATION. NO SETUP WIZARDS. JUST WORKS.                           │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -98,14 +96,14 @@
 ║  Directory-Based Project Names    ║  ✓ ACTIVE    ║  Uses folder name         ║
 ║  Auto Authentication              ║  ✓ ACTIVE    ║  Handles credentials      ║
 ║  Issue Export                     ║  ✓ ACTIVE    ║  Download to JSON         ║
-║  Cyberpunk Aesthetics             ║  ✓ MAXIMUM   ║  Neon. ASCII. Vibes.      ║
+║  Retro Terminal Style             ║  ✓ MAXIMUM   ║  Neon. ASCII. Vibes.      ║
 ║  Idempotent Install               ║  ✓ ACTIVE    ║  Safe to run repeatedly   ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
 ---
 
-## `◢◤ SYSTEM REQUIREMENTS // WETWARE COMPATIBILITY ◢◤`
+## `◢◤ SYSTEM REQUIREMENTS ◢◤`
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -119,23 +117,23 @@
 │                                                                              │
 └──────────────────────────────────────────────────────────────────────────────┘
 
-  [ MANDATORY NEURAL LINKS ]
+  [ REQUIRED ]
 
     ◢ Docker          Running and accessible
-    ◢ curl            For API infiltration
-    ◢ Bash 4.0+       Shell interface
-    ◢ Python 3        Data processing unit
+    ◢ curl            For API communication
+    ◢ Bash 4.0+       Shell environment
+    ◢ Python 3        For data processing
 
-  [ RECOMMENDED SPECS ]
+  [ RECOMMENDED ]
 
-    ◢ 4GB+ RAM        SonarQube is hungry
+    ◢ 4GB+ RAM        SonarQube needs memory
     ◢ 2GB+ Disk       For container images
-    ◢ Fast Internet   First-time image pulls
+    ◢ Fast Internet   For first-time image pulls
 ```
 
 ---
 
-## `◢◤ NEURAL IMPLANT PROCEDURE // INSTALLATION ◢◤`
+## `◢◤ INSTALLATION ◢◤`
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -150,17 +148,17 @@
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### **METHOD 1: Quick Jack-In (Recommended)**
+### **METHOD 1: Quick Install (Recommended)**
 
 ```bash
-# Clone the neural interface
+# Clone the repo
 git clone https://github.com/utajum/sonar-scanner.git
 cd sonar-scanner
 
-# Deploy to system
+# Install to system
 sudo ./install.sh --install
 
-# You're jacked in, netrunner
+# Verify installation
 sonar-scan --help
 ```
 
@@ -177,21 +175,21 @@ sudo ./install.sh
 # Select [1] INSTALL
 ```
 
-### **METHOD 3: Manual Override**
+### **METHOD 3: Manual Install**
 
 ```bash
-# For the paranoid netrunner who trusts no one
+# For those who prefer manual control
 git clone https://github.com/utajum/sonar-scanner.git
 cd sonar-scanner
 
-# Copy directly (you rebel, you)
+# Copy directly
 sudo cp sonar-scan.sh /usr/local/bin/sonar-scan
 sudo chmod +x /usr/local/bin/sonar-scan
 ```
 
 ---
 
-## `◢◤ COMBAT OPERATIONS // USAGE ◢◤`
+## `◢◤ USAGE ◢◤`
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -206,32 +204,32 @@ sudo chmod +x /usr/local/bin/sonar-scan
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### **Basic Infiltration**
+### **Basic Usage**
 
 ```bash
-# Navigate to target codebase
+# Navigate to your project
 cd /path/to/your/project
 
-# Initiate scan (interactive menu)
+# Run scan (interactive menu)
 sonar-scan
 
 # Or go directly to scan mode
 sonar-scan --scan
 ```
 
-### **Advanced Operations**
+### **More Options**
 
 ```bash
 # Scan specific directory
 sonar-scan /path/to/target
 
-# Download all vulnerabilities to JSON
+# Download all issues to JSON
 sonar-scan --download
 
 # Quiet mode (minimal output)
 sonar-scan --quiet
 
-# Display help matrix
+# Display help
 sonar-scan --help
 
 # Show version info
@@ -267,22 +265,22 @@ $ sonar-scan
     ║   [2]  ▸▸▸  DOWNLOAD ALL ISSUES                             ║
     ║        Extract vulnerability data to JSON                    ║
     ║                                                              ║
-    ║   [Q]  ▸▸▸  ABORT MISSION                                   ║
+    ║   [Q]  ▸▸▸  EXIT                                             ║
     ║                                                              ║
     ╚══════════════════════════════════════════════════════════════╝
 
     ◢◤ ENTER COMMAND CODE: 1
 
-[14:32:01] [INIT]    ▸ Booting neural interface...
-[14:32:01] [INIT]    ▸ Establishing neural link with Docker daemon...
-[14:32:01] [DONE]    ▸ Docker neural link established
+[14:32:01] [INIT]    ▸ Starting up...
+[14:32:01] [INIT]    ▸ Checking Docker connection...
+[14:32:01] [DONE]    ▸ Docker is running
 [14:32:02] [INIT]    ▸ Scanning for SonarQube instance at http://localhost:9000...
 [14:32:02] [DONE]    ▸ SonarQube instance online and operational
-[14:32:02] [AUTH]    ▸ Bypassing security protocols...
-[14:32:03] [DONE]    ▸ Security protocols bypassed. Token acquired.
-[14:32:03] [PURGE]   ▸ Eliminating previous scan data for my-awesome-app...
-[14:32:03] [DONE]    ▸ Previous project data purged successfully
-[14:32:03] [DEPLOY]  ▸ Launching attack vector...
+[14:32:02] [AUTH]    ▸ Authenticating with SonarQube...
+[14:32:03] [DONE]    ▸ Authentication successful. Token acquired.
+[14:32:03] [PURGE]   ▸ Clearing previous scan data for my-awesome-app...
+[14:32:03] [DONE]    ▸ Previous project data cleared
+[14:32:03] [DEPLOY]  ▸ Starting scanner...
 
     ╔══════════════════════════════════════════════════════════════╗
     ║                                                              ║
@@ -293,7 +291,7 @@ $ sonar-scan
     ║   ██║  ██║╚██████╗╚██████╗███████╗███████║███████║          ║
     ║   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚══════╝╚══════╝╚══════╝          ║
     ║                                                              ║
-    ║  TARGET NEUTRALIZED - SCAN COMPLETE                          ║
+    ║  SCAN COMPLETE                                                ║
     ║                                                              ║
     ║  View results:                                               ║
     ║  http://localhost:9000/dashboard?id=my-awesome-app           ║
@@ -328,9 +326,9 @@ $ sonar-scan
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                                                                              │
-│   The beauty of SONAR-SCAN is that it requires NO configuration.            │
+│   SONAR-SCANNER requires NO configuration.                                   │
 │                                                                              │
-│   But for the curious netrunner, here's what's happening under the hood:    │
+│   But if you're curious, here's what's happening under the hood:            │
 │                                                                              │
 │   ┌────────────────────────────────────────────────────────────────────┐    │
 │   │  PARAMETER              │  DEFAULT VALUE                          │    │
@@ -350,7 +348,7 @@ $ sonar-scan
 
 ---
 
-## `◢◤ KNOWN EXPLOITS // TROUBLESHOOTING ◢◤`
+## `◢◤ TROUBLESHOOTING ◢◤`
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -395,14 +393,14 @@ SOLUTION: Run installer with sudo:
 
 ---
 
-## `◢◤ THE ARCHITECTURE // SYSTEM DIAGRAM ◢◤`
+## `◢◤ ARCHITECTURE ◢◤`
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                                                                              │
 │                         ┌─────────────────────┐                              │
-│                         │    NETRUNNER        │                              │
-│                         │    (You)            │                              │
+│                         │       USER          │                              │
+│                         │       (You)         │                              │
 │                         └──────────┬──────────┘                              │
 │                                    │                                         │
 │                                    ▼                                         │
@@ -436,7 +434,7 @@ SOLUTION: Run installer with sudo:
 
 ---
 
-## `◢◤ CREDITS // ACKNOWLEDGMENTS ◢◤`
+## `◢◤ CREDITS ◢◤`
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -452,13 +450,13 @@ SOLUTION: Run installer with sudo:
 ║                                                                              ║
 ║   CREATED BY:       utajum                                                   ║
 ║   POWERED BY:       SonarQube // Docker // Pure Bash Madness                 ║
-║   AESTHETIC:        Cyberpunk 2077 meets The Matrix meets ANSI NFO files     ║
+║   AESTHETIC:        Retro terminal meets ANSI NFO files                      ║
 ║   SOUNDTRACK:       Perturbator, Carpenter Brut, Lazerhawk                   ║
 ║                                                                              ║
 ║   SPECIAL THANKS:                                                            ║
 ║   • SonarSource for building the scanner                                     ║
 ║   • Docker for containerization                                              ║
-║   • The cyberpunk genre for the aesthetic                                    ║
+║   • Retro terminal aesthetics                                                ║
 ║   • Coffee, lots of coffee                                                   ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
@@ -469,12 +467,12 @@ SOLUTION: Run installer with sudo:
 ## `◢◤ LICENSE ◢◤`
 
 ```
-MIT License - Because information wants to be free, choom.
+MIT License
 
 Copyright (c) 2024 utajum
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software... [you know the rest]
+of this software and associated documentation files...
 ```
 
 ---
@@ -491,9 +489,9 @@ of this software... [you know the rest]
 ║   ███████╗██║ ╚████║██████╔╝       ██║   ██║  ██║██║  ██║██║ ╚████║███████║  ║
 ║   ╚══════╝╚═╝  ╚═══╝╚═════╝        ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝  ║
 ║                                                                              ║
-║                    // HACK THE PLANET //                                     ║
-║                    // STAY FROSTY, NETRUNNER //                              ║
-║                    // SEE YOU IN THE NET //                                  ║
+║                    // SCAN YOUR CODE //                                      ║
+║                    // FIX YOUR BUGS //                                       ║
+║                    // SHIP WITH CONFIDENCE //                                ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -502,6 +500,6 @@ of this software... [you know the rest]
 
 ---
 
-*"The street finds its own uses for things." - William Gibson*
+*"Good code is its own best documentation." - Steve McConnell*
 
 </div>

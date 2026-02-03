@@ -7,7 +7,7 @@
 #   ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗██║  ██║
 #   ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝
 #
-#   [ N E U R A L   I M P L A N T   P R O C E D U R E ]
+#   [ S Y S T E M   I N S T A L L E R ]
 #
 #   Sonar-Scan System Integration Script
 #   https://github.com/utajum/sonar-scanner
@@ -62,7 +62,7 @@ show_banner() {
     ║   ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀   ║
     ║                                                                               ║
 EOF
-    echo -e "${NEON_CYAN}    ║               ${NEON_YELLOW}[ N E U R A L   I M P L A N T   P R O C E D U R E ]${NEON_CYAN}             ║${NC}"
+    echo -e "${NEON_CYAN}    ║                     ${NEON_YELLOW}[ S Y S T E M   I N S T A L L E R ]${NEON_CYAN}                   ║${NC}"
     echo -e "${NEON_PURPLE}    ║                                                                               ║"
     echo -e "    ╚═══════════════════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
@@ -123,10 +123,10 @@ show_menu() {
     echo -e "${NEON_CYAN}╠══════════════════════════════════════════════════════════════╣${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}   ${NEON_GREEN}[1]${NC}  ${WHITE}▸▸▸${NC}  INSTALL                                       ${NEON_CYAN}║${NC}"
-    echo -e "${NEON_CYAN}║${NC}        ${DIM}Deploy neural implant to /usr/local/bin${NC}             ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}        ${DIM}Install to /usr/local/bin${NC}                          ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}   ${NEON_YELLOW}[2]${NC}  ${WHITE}▸▸▸${NC}  UPDATE                                        ${NEON_CYAN}║${NC}"
-    echo -e "${NEON_CYAN}║${NC}        ${DIM}Upgrade existing neural interface${NC}                   ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}        ${DIM}Upgrade existing installation${NC}                       ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}   ${NEON_ORANGE}[3]${NC}  ${WHITE}▸▸▸${NC}  REMOVE                                        ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}        ${DIM}Purge implant from system${NC}                           ${NEON_CYAN}║${NC}"
@@ -162,7 +162,7 @@ show_menu() {
 #  P R E F L I G H T   C H E C K S
 # ══════════════════════════════════════════════════════════════════════════════
 check_dependencies() {
-    cyber_echo "CHECK" "Scanning for required neural interfaces..."
+    cyber_echo "CHECK" "Checking required dependencies..."
     
     local missing_deps=()
     
@@ -176,7 +176,7 @@ check_dependencies() {
         missing_deps+=("docker")
         cyber_echo "WARN" "Docker not detected - required for scanning operations"
     else
-        cyber_echo "DONE" "Docker neural link available"
+        cyber_echo "DONE" "Docker available"
     fi
     
     # Check for curl
@@ -209,7 +209,7 @@ check_dependencies() {
 }
 
 check_source_script() {
-    cyber_echo "CHECK" "Locating source neural implant..."
+    cyber_echo "CHECK" "Locating source script..."
     
     if [ ! -f "$SOURCE_SCRIPT" ]; then
         cyber_echo "FAIL" "Source script not found: $SOURCE_SCRIPT"
@@ -260,7 +260,7 @@ get_installed_version() {
 # ══════════════════════════════════════════════════════════════════════════════
 do_install() {
     echo ""
-    cyber_echo "INIT" "Initiating neural implant procedure..."
+    cyber_echo "INIT" "Starting installation..."
     echo ""
     
     check_source_script
@@ -285,7 +285,7 @@ do_install() {
         fi
     fi
     
-    cyber_echo "DEPLOY" "Deploying neural implant to ${NEON_CYAN}${INSTALL_DIR}${NC}..."
+    cyber_echo "DEPLOY" "Installing to ${NEON_CYAN}${INSTALL_DIR}${NC}..."
     
     # Copy the script (not symlink - for portability)
     cp "$SOURCE_SCRIPT" "$INSTALL_DIR/$SCRIPT_NAME"
@@ -302,7 +302,7 @@ do_install() {
         echo -e "${NEON_GREEN}║${NC}   ███████║╚██████╔╝╚██████╗╚██████╗███████╗███████║███████║  ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}   ╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝╚══════╝╚══════╝╚══════╝  ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
-        echo -e "${NEON_GREEN}║${NC}  ${BOLD}NEURAL IMPLANT DEPLOYED SUCCESSFULLY${NC}                      ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC}  ${BOLD}INSTALLATION COMPLETE${NC}                                     ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}  ${WHITE}Location:${NC}  ${NEON_CYAN}${INSTALL_DIR}/${SCRIPT_NAME}${NC}"
         echo -e "${NEON_GREEN}║${NC}  ${WHITE}Version:${NC}   ${NEON_YELLOW}${VERSION}${NC}"
@@ -322,7 +322,7 @@ do_install() {
 # ══════════════════════════════════════════════════════════════════════════════
 do_update() {
     echo ""
-    cyber_echo "INIT" "Initiating neural interface upgrade..."
+    cyber_echo "INIT" "Starting upgrade..."
     echo ""
     
     check_source_script
@@ -352,7 +352,7 @@ do_update() {
         cyber_echo "SKIP" "Versions identical - forcing update anyway..."
     fi
     
-    cyber_echo "DEPLOY" "Upgrading neural interface..."
+    cyber_echo "DEPLOY" "Upgrading installation..."
     
     # Backup old version (just in case)
     cp "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/${SCRIPT_NAME}.backup" 2>/dev/null || true
@@ -367,7 +367,7 @@ do_update() {
     echo ""
     echo -e "${NEON_GREEN}╔══════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
-    echo -e "${NEON_GREEN}║${NC}  ${BOLD}NEURAL INTERFACE UPGRADED SUCCESSFULLY${NC}                    ${NEON_GREEN}║${NC}"
+    echo -e "${NEON_GREEN}║${NC}  ${BOLD}UPGRADE COMPLETE${NC}                                          ${NEON_GREEN}║${NC}"
     echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
     echo -e "${NEON_GREEN}║${NC}  ${WHITE}Previous:${NC}  ${DIM}${installed_ver}${NC}"
     echo -e "${NEON_GREEN}║${NC}  ${WHITE}Current:${NC}   ${NEON_YELLOW}${source_ver}${NC}"
@@ -380,7 +380,7 @@ do_update() {
 # ══════════════════════════════════════════════════════════════════════════════
 do_remove() {
     echo ""
-    cyber_echo "INIT" "Initiating neural implant removal procedure..."
+    cyber_echo "INIT" "Starting removal..."
     echo ""
     
     if ! is_installed; then
@@ -407,7 +407,7 @@ do_remove() {
         exit 0
     fi
     
-    cyber_echo "REMOVE" "Purging neural implant..."
+    cyber_echo "REMOVE" "Removing sonar-scan..."
     
     rm -f "$INSTALL_DIR/$SCRIPT_NAME"
     
@@ -415,7 +415,7 @@ do_remove() {
         echo ""
         echo -e "${NEON_ORANGE}╔══════════════════════════════════════════════════════════════╗${NC}"
         echo -e "${NEON_ORANGE}║${NC}                                                              ${NEON_ORANGE}║${NC}"
-        echo -e "${NEON_ORANGE}║${NC}  ${BOLD}NEURAL IMPLANT REMOVED${NC}                                    ${NEON_ORANGE}║${NC}"
+        echo -e "${NEON_ORANGE}║${NC}  ${BOLD}UNINSTALL COMPLETE${NC}                                        ${NEON_ORANGE}║${NC}"
         echo -e "${NEON_ORANGE}║${NC}                                                              ${NEON_ORANGE}║${NC}"
         echo -e "${NEON_ORANGE}║${NC}  ${DIM}sonar-scan has been purged from your system${NC}                ${NEON_ORANGE}║${NC}"
         echo -e "${NEON_ORANGE}║${NC}  ${DIM}Run ./install.sh to reinstall${NC}                              ${NEON_ORANGE}║${NC}"
@@ -432,7 +432,7 @@ do_remove() {
 # ══════════════════════════════════════════════════════════════════════════════
 do_status() {
     echo ""
-    cyber_echo "CHECK" "Scanning system for neural implant..."
+    cyber_echo "CHECK" "Checking installation status..."
     echo ""
     
     local installed_ver=$(get_installed_version)
@@ -511,7 +511,7 @@ main() {
     
     echo ""
     echo -e "${DIM}    ═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${DIM}    END TRANSMISSION // SYSTEM INTEGRATION COMPLETE${NC}"
+    echo -e "${DIM}    DONE // github.com/utajum/sonar-scanner${NC}"
     echo -e "${DIM}    ═══════════════════════════════════════════════════════════════${NC}"
     echo ""
 }

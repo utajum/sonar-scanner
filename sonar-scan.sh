@@ -68,7 +68,7 @@ EOF
     echo -e "${NEON_PURPLE}    ║                                                                               ║"
     echo -e "    ╚═══════════════════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "    ${DIM}Version ${VERSION} // HACK THE PLANET // github.com/utajum/sonar-scanner${NC}"
+    echo -e "    ${DIM}Version ${VERSION} // github.com/utajum/sonar-scanner${NC}"
     echo ""
 }
 
@@ -181,13 +181,13 @@ show_menu() {
     echo -e "${NEON_CYAN}║${NC}               ${BOLD}S E L E C T   O P E R A T I O N${NC}                 ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}╠══════════════════════════════════════════════════════════════╣${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
-    echo -e "${NEON_CYAN}║${NC}   ${NEON_GREEN}[1]${NC}  ${WHITE}▸▸▸${NC}  RUN VULNERABILITY SCAN                        ${NEON_CYAN}║${NC}"
-    echo -e "${NEON_CYAN}║${NC}        ${DIM}Initiate full spectrum code analysis${NC}                ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}   ${NEON_GREEN}[1]${NC}  ${WHITE}▸▸▸${NC}  RUN CODE SCAN                                 ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}        ${DIM}Analyze code for bugs and vulnerabilities${NC}          ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}   ${NEON_YELLOW}[2]${NC}  ${WHITE}▸▸▸${NC}  DOWNLOAD ALL ISSUES                          ${NEON_CYAN}║${NC}"
-    echo -e "${NEON_CYAN}║${NC}        ${DIM}Extract vulnerability data to JSON${NC}                  ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}        ${DIM}Export issues to JSON file${NC}                         ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
-    echo -e "${NEON_CYAN}║${NC}   ${RED}[Q]${NC}  ${WHITE}▸▸▸${NC}  ABORT MISSION                                ${NEON_CYAN}║${NC}"
+    echo -e "${NEON_CYAN}║${NC}   ${RED}[Q]${NC}  ${WHITE}▸▸▸${NC}  EXIT                                         ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}║${NC}                                                              ${NEON_CYAN}║${NC}"
     echo -e "${NEON_CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
@@ -199,7 +199,7 @@ show_menu() {
         2) ACTION="download" ;;
         q|Q) 
             echo ""
-            cyber_echo "INFO" "Mission aborted. Stay frosty, netrunner."
+            cyber_echo "INFO" "Exiting. Goodbye!"
             exit 0
             ;;
         *)
@@ -213,7 +213,7 @@ show_menu() {
 #  C O R E   F U N C T I O N S
 # ══════════════════════════════════════════════════════════════════════════════
 check_docker() {
-    cyber_echo "INIT" "Establishing neural link with Docker daemon..."
+    cyber_echo "INIT" "Checking Docker connection..."
     
     if ! docker info > /dev/null 2>&1; then
         cyber_echo "FAIL" "Docker daemon unreachable. Boot sequence failed."
@@ -225,7 +225,7 @@ check_docker() {
         exit 1
     fi
     
-    cyber_echo "DONE" "Docker neural link established"
+    cyber_echo "DONE" "Docker is running"
 }
 
 check_sonarqube() {
@@ -266,7 +266,7 @@ check_sonarqube() {
 }
 
 authenticate() {
-    cyber_echo "AUTH" "Bypassing security protocols..."
+    cyber_echo "AUTH" "Authenticating with SonarQube..."
     
     local DEFAULT_PASSWORD="admin"
     local SECURE_PASSWORD="Sonarscanner1!"
@@ -276,7 +276,7 @@ authenticate() {
     
     # Try secure password first, then default
     for PASSWORD in "$SECURE_PASSWORD" "$DEFAULT_PASSWORD"; do
-        cyber_echo "AUTH" "Attempting authentication vector ${DIM}[${PASSWORD:0:3}***]${NC}"
+        cyber_echo "AUTH" "Trying credentials ${DIM}[${PASSWORD:0:3}***]${NC}"
         
         RESPONSE=$(curl -s -u "admin:$PASSWORD" "$SONAR_HOST/api/user_tokens/generate" -d "name=$TOKEN_NAME" 2>/dev/null)
         
@@ -287,7 +287,7 @@ authenticate() {
             
             # If we logged in with default password, change it
             if [ "$PASSWORD" = "$DEFAULT_PASSWORD" ]; then
-                cyber_echo "AUTH" "Default credentials detected. Hardening security matrix..."
+                cyber_echo "AUTH" "Default credentials detected. Updating password..."
                 
                 CHANGE_RESPONSE=$(curl -s -u "admin:$DEFAULT_PASSWORD" \
                     "$SONAR_HOST/api/users/change_password" \
@@ -296,10 +296,10 @@ authenticate() {
                     -d "password=$SECURE_PASSWORD" 2>/dev/null)
                 
                 if [ -z "$CHANGE_RESPONSE" ] || echo "$CHANGE_RESPONSE" | grep -q "^$"; then
-                    cyber_echo "DONE" "Security matrix hardened successfully"
+                    cyber_echo "DONE" "Password updated successfully"
                     AUTH_PASSWORD="$SECURE_PASSWORD"
                 else
-                    cyber_echo "WARN" "Security hardening failed. Proceeding with default credentials."
+                    cyber_echo "WARN" "Password update failed. Proceeding with default credentials."
                 fi
             fi
             break
@@ -310,20 +310,20 @@ authenticate() {
         cyber_echo "FAIL" "Authentication failed. Access denied."
         echo ""
         echo -e "    ${RED}╔════════════════════════════════════════════════════════╗${NC}"
-        echo -e "    ${RED}║${NC}  ${BOLD}INTRUSION COUNTERMEASURES ACTIVATED${NC}                   ${RED}║${NC}"
+        echo -e "    ${RED}║${NC}  ${BOLD}AUTHENTICATION FAILED${NC}                                 ${RED}║${NC}"
         echo -e "    ${RED}║${NC}  Unable to authenticate with SonarQube                 ${RED}║${NC}"
         echo -e "    ${RED}║${NC}  Check your credentials and try again                  ${RED}║${NC}"
         echo -e "    ${RED}╚════════════════════════════════════════════════════════╝${NC}"
         exit 1
     fi
     
-    cyber_echo "DONE" "Security protocols bypassed. Token acquired."
+    cyber_echo "DONE" "Authentication successful. Token acquired."
 }
 
 purge_existing_project() {
     local project_key="$1"
     
-    cyber_echo "PURGE" "Eliminating previous scan data for ${NEON_CYAN}${project_key}${NC}..."
+    cyber_echo "PURGE" "Clearing previous scan data for ${NEON_CYAN}${project_key}${NC}..."
     
     # Check if project exists first
     local project_exists=$(curl -s -u "$SONAR_TOKEN:" "$SONAR_HOST/api/projects/search?projects=$project_key" 2>/dev/null | grep -c '"key"')
@@ -333,9 +333,9 @@ purge_existing_project() {
         local delete_response=$(curl -s -u "$SONAR_TOKEN:" -X POST "$SONAR_HOST/api/projects/delete?project=$project_key" 2>/dev/null)
         
         if [ -z "$delete_response" ]; then
-            cyber_echo "DONE" "Previous project data purged successfully"
+            cyber_echo "DONE" "Previous project data cleared"
         else
-            cyber_echo "WARN" "Purge may have encountered issues: ${delete_response}"
+            cyber_echo "WARN" "Clear may have encountered issues: ${delete_response}"
         fi
     else
         cyber_echo "INFO" "No previous scan data detected. Clean slate."
@@ -354,7 +354,7 @@ run_scan() {
     echo -e "${NEON_GREEN}║${NC}  ${WHITE}TARGET:${NC}     ${NEON_CYAN}${project_key}${NC}"
     printf "${NEON_GREEN}║${NC}  ${WHITE}DIRECTORY:${NC}  ${DIM}%-43s${NC}  ${NEON_GREEN}║${NC}\n" "$target_dir"
     echo -e "${NEON_GREEN}║${NC}  ${WHITE}HOST:${NC}       ${NEON_PURPLE}${SONAR_HOST}${NC}"
-    echo -e "${NEON_GREEN}║${NC}  ${WHITE}MODE:${NC}       ${NEON_YELLOW}FULL SPECTRUM ANALYSIS${NC}"
+    echo -e "${NEON_GREEN}║${NC}  ${WHITE}MODE:${NC}       ${NEON_YELLOW}FULL CODE ANALYSIS${NC}"
     echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
     echo -e "${NEON_GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
@@ -362,7 +362,7 @@ run_scan() {
     # Purge existing project for fresh scan
     purge_existing_project "$project_key"
     
-    cyber_echo "DEPLOY" "Launching attack vector..."
+    cyber_echo "DEPLOY" "Starting scanner..."
     echo ""
     
     docker run --rm \
@@ -388,7 +388,7 @@ run_scan() {
         echo -e "${NEON_GREEN}║${NC}   ██║  ██║╚██████╗╚██████╗███████╗███████║███████║          ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚══════╝╚══════╝╚══════╝          ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
-        echo -e "${NEON_GREEN}║${NC}  ${BOLD}TARGET NEUTRALIZED - SCAN COMPLETE${NC}                        ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC}  ${BOLD}SCAN COMPLETE${NC}                                             ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}                                                              ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}  ${WHITE}View results:${NC}                                             ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}  ${NEON_CYAN}${SONAR_HOST}/dashboard?id=${project_key}${NC}"
@@ -404,7 +404,7 @@ run_scan() {
         echo -e "${RED}║${NC}   ██║     ██║  ██║██║███████╗███████╗██████╔╝               ${RED}║${NC}"
         echo -e "${RED}║${NC}   ╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═════╝                ${RED}║${NC}"
         echo -e "${RED}║${NC}                                                              ${RED}║${NC}"
-        echo -e "${RED}║${NC}  ${BOLD}INTRUSION DETECTED - SCAN ABORTED${NC}                         ${RED}║${NC}"
+        echo -e "${RED}║${NC}  ${BOLD}SCAN FAILED${NC}                                                ${RED}║${NC}"
         echo -e "${RED}║${NC}  Exit code: ${scan_exit_code}                                               ${RED}║${NC}"
         echo -e "${RED}║${NC}                                                              ${RED}║${NC}"
         echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${NC}"
@@ -422,7 +422,7 @@ download_issues() {
     echo -e "${NEON_YELLOW}╠══════════════════════════════════════════════════════════════╣${NC}"
     echo -e "${NEON_YELLOW}║${NC}                                                              ${NEON_YELLOW}║${NC}"
     echo -e "${NEON_YELLOW}║${NC}  ${WHITE}PROJECT:${NC}  ${NEON_CYAN}${project_key}${NC}"
-    echo -e "${NEON_YELLOW}║${NC}  ${WHITE}MODE:${NC}     ${NEON_PURPLE}FULL VULNERABILITY DUMP${NC}"
+    echo -e "${NEON_YELLOW}║${NC}  ${WHITE}MODE:${NC}     ${NEON_PURPLE}EXPORT ALL ISSUES${NC}"
     echo -e "${NEON_YELLOW}║${NC}                                                              ${NEON_YELLOW}║${NC}"
     echo -e "${NEON_YELLOW}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
@@ -437,10 +437,10 @@ download_issues() {
     
     echo "[]" > "$TEMP_FILE"
     
-    cyber_echo "DATA" "Initiating data stream extraction..."
+    cyber_echo "DATA" "Fetching issues from SonarQube..."
     
     while true; do
-        cyber_echo "DATA" "Decrypting page ${PAGE}..."
+        cyber_echo "DATA" "Fetching page ${PAGE}..."
         
         RESPONSE=$(curl -s -u "$SONAR_TOKEN:" \
             "$SONAR_HOST/api/issues/search?componentKeys=$project_key&ps=$PAGE_SIZE&p=$PAGE")
@@ -478,7 +478,7 @@ print(f'{len(issues)}|{total}')
         
         TOTAL_FETCHED=$((TOTAL_FETCHED + PAGE_ISSUE_COUNT))
         
-        show_progress $TOTAL_FETCHED $TOTAL "Extracting vulnerabilities..."
+        show_progress $TOTAL_FETCHED $TOTAL "Downloading issues..."
         
         if [ "$TOTAL_FETCHED" -ge "$TOTAL" ]; then
             break
@@ -594,7 +594,7 @@ main() {
     fi
     
     echo ""
-    cyber_echo "INIT" "Booting neural interface..."
+    cyber_echo "INIT" "Starting up..."
     
     # Run checks
     check_docker
@@ -617,7 +617,7 @@ main() {
     
     echo ""
     echo -e "${DIM}    ═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${DIM}    END TRANSMISSION // HACK THE PLANET // STAY FROSTY, NETRUNNER${NC}"
+    echo -e "${DIM}    DONE // github.com/utajum/sonar-scanner${NC}"
     echo -e "${DIM}    ═══════════════════════════════════════════════════════════════${NC}"
     echo ""
 }
