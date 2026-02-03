@@ -16,8 +16,15 @@
 VERSION="1.0.0"
 SCRIPT_NAME="sonar-scan"
 INSTALL_DIR="/usr/local/bin"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd 2>/dev/null || echo "/tmp")"
 SOURCE_SCRIPT="$SCRIPT_DIR/sonar-scan.sh"
+REMOTE_SCRIPT_URL="https://raw.githubusercontent.com/utajum/sonar-scanner/refs/heads/master/sonar-scan.sh"
+
+# Detect if running from pipe (curl | bash)
+IS_PIPED=false
+if [ ! -t 0 ]; then
+    IS_PIPED=true
+fi
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  C O L O R   M A T R I X
@@ -212,14 +219,19 @@ check_source_script() {
     cyber_echo "CHECK" "Locating source script..."
     
     if [ ! -f "$SOURCE_SCRIPT" ]; then
-        cyber_echo "FAIL" "Source script not found: $SOURCE_SCRIPT"
-        echo ""
-        echo -e "    ${RED}╔════════════════════════════════════════════════════════╗${NC}"
-        echo -e "    ${RED}║${NC}  ${BOLD}ERROR:${NC} sonar-scan.sh not found                        ${RED}║${NC}"
-        echo -e "    ${RED}║${NC}  Expected location: ${SOURCE_SCRIPT}             ${RED}║${NC}"
-        echo -e "    ${RED}║${NC}  Ensure install.sh is in the same directory          ${RED}║${NC}"
-        echo -e "    ${RED}╚════════════════════════════════════════════════════════╝${NC}"
-        exit 1
+        cyber_echo "INFO" "Source script not found locally, downloading from GitHub..."
+        
+        # Create temp file for download
+        SOURCE_SCRIPT=$(mktemp)
+        
+        if ! curl -fsSL "$REMOTE_SCRIPT_URL" -o "$SOURCE_SCRIPT" 2>/dev/null; then
+            cyber_echo "FAIL" "Failed to download sonar-scan.sh from GitHub"
+            rm -f "$SOURCE_SCRIPT"
+            exit 1
+        fi
+        
+        cyber_echo "DONE" "Downloaded sonar-scan.sh from GitHub"
+        return
     fi
     
     cyber_echo "DONE" "Source implant located: ${DIM}${SOURCE_SCRIPT}${NC}"
@@ -277,11 +289,15 @@ do_install() {
     if is_installed; then
         local installed_ver=$(get_installed_version)
         cyber_echo "WARN" "Existing installation detected (v${installed_ver})"
-        echo -ne "    ${NEON_PURPLE}◢◤${NC} ${WHITE}Overwrite existing installation? [y/N]:${NC} "
-        read -r confirm
-        if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-            cyber_echo "INFO" "Installation aborted by user"
-            exit 0
+        if [ "$IS_PIPED" = true ]; then
+            cyber_echo "INFO" "Overwriting existing installation (piped mode)..."
+        else
+            echo -ne "    ${NEON_PURPLE}◢◤${NC} ${WHITE}Overwrite existing installation? [y/N]:${NC} "
+            read -r confirm
+            if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+                cyber_echo "INFO" "Installation aborted by user"
+                exit 0
+            fi
         fi
     fi
     
@@ -499,8 +515,14 @@ main() {
             show_help
             ;;
         "")
-            show_banner
-            show_menu
+            # Auto-install when piped (curl | bash), otherwise show menu
+            if [ "$IS_PIPED" = true ]; then
+                show_banner
+                do_install
+            else
+                show_banner
+                show_menu
+            fi
             ;;
         *)
             cyber_echo "FAIL" "Unknown option: $1"
