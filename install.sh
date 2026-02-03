@@ -16,13 +16,15 @@
 VERSION="1.0.0"
 SCRIPT_NAME="sonar-scan"
 INSTALL_DIR="/usr/local/bin"
+USE_SUDO=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd 2>/dev/null || echo "/tmp")"
 SOURCE_SCRIPT="$SCRIPT_DIR/sonar-scan.sh"
 REMOTE_SCRIPT_URL="https://raw.githubusercontent.com/utajum/sonar-scanner/refs/heads/master/sonar-scan.sh"
 
 # Detect if running from pipe (curl | bash)
+# When piped, BASH_SOURCE[0] won't be a real file
 IS_PIPED=false
-if [ ! -t 0 ]; then
+if [[ ! -f "${BASH_SOURCE[0]}" ]]; then
     IS_PIPED=true
 fi
 
@@ -247,12 +249,28 @@ check_permissions() {
     
     if [ ! -w "$INSTALL_DIR" ]; then
         cyber_echo "WARN" "Write permission denied for $INSTALL_DIR"
-        cyber_echo "INFO" "Root access may be required (try: sudo ./install.sh)"
-        return 1
+        # Check if we can use sudo
+        if command -v sudo &>/dev/null; then
+            cyber_echo "INFO" "Elevating with sudo..."
+            USE_SUDO=true
+            return 0
+        else
+            cyber_echo "INFO" "Root access may be required (try: sudo ./install.sh)"
+            return 1
+        fi
     fi
     
     cyber_echo "DONE" "Write access confirmed"
     return 0
+}
+
+# Helper to run commands with sudo if needed
+run_privileged() {
+    if [ "$USE_SUDO" = true ]; then
+        sudo "$@"
+    else
+        "$@"
+    fi
 }
 
 is_installed() {
@@ -304,8 +322,8 @@ do_install() {
     cyber_echo "DEPLOY" "Installing to ${NEON_CYAN}${INSTALL_DIR}${NC}..."
     
     # Copy the script (not symlink - for portability)
-    cp "$SOURCE_SCRIPT" "$INSTALL_DIR/$SCRIPT_NAME"
-    chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
+    run_privileged cp "$SOURCE_SCRIPT" "$INSTALL_DIR/$SCRIPT_NAME"
+    run_privileged chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
     
     if is_installed; then
         echo ""
@@ -371,14 +389,14 @@ do_update() {
     cyber_echo "DEPLOY" "Upgrading installation..."
     
     # Backup old version (just in case)
-    cp "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/${SCRIPT_NAME}.backup" 2>/dev/null || true
+    run_privileged cp "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/${SCRIPT_NAME}.backup" 2>/dev/null || true
     
     # Deploy new version
-    cp "$SOURCE_SCRIPT" "$INSTALL_DIR/$SCRIPT_NAME"
-    chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
+    run_privileged cp "$SOURCE_SCRIPT" "$INSTALL_DIR/$SCRIPT_NAME"
+    run_privileged chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
     
     # Remove backup on success
-    rm -f "$INSTALL_DIR/${SCRIPT_NAME}.backup" 2>/dev/null || true
+    run_privileged rm -f "$INSTALL_DIR/${SCRIPT_NAME}.backup" 2>/dev/null || true
     
     echo ""
     echo -e "${NEON_GREEN}╔══════════════════════════════════════════════════════════════╗${NC}"
@@ -425,7 +443,7 @@ do_remove() {
     
     cyber_echo "REMOVE" "Removing sonar-scan..."
     
-    rm -f "$INSTALL_DIR/$SCRIPT_NAME"
+    run_privileged rm -f "$INSTALL_DIR/$SCRIPT_NAME"
     
     if ! is_installed; then
         echo ""
