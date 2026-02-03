@@ -149,7 +149,7 @@
 ```
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/utajum/sonar-scanner/refs/heads/master/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/utajum/sonar-scanner/refs/heads/master/install.sh | bash
 ```
 
 ---
