@@ -323,7 +323,7 @@ do_install() {
     
     # Copy the script (not symlink - for portability)
     run_privileged cp "$SOURCE_SCRIPT" "$INSTALL_DIR/$SCRIPT_NAME"
-    run_privileged chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
+    run_privileged chmod 755 "$INSTALL_DIR/$SCRIPT_NAME"
     
     if is_installed; then
         echo ""
@@ -393,7 +393,7 @@ do_update() {
     
     # Deploy new version
     run_privileged cp "$SOURCE_SCRIPT" "$INSTALL_DIR/$SCRIPT_NAME"
-    run_privileged chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
+    run_privileged chmod 755 "$INSTALL_DIR/$SCRIPT_NAME"
     
     # Remove backup on success
     run_privileged rm -f "$INSTALL_DIR/${SCRIPT_NAME}.backup" 2>/dev/null || true
