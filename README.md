@@ -28,6 +28,7 @@
 ![Docker](https://img.shields.io/badge/DOCKER-REQUIRED-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Bash](https://img.shields.io/badge/BASH-5.0+-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)
 ![SonarQube](https://img.shields.io/badge/SONARQUBE-HUNTER-4E9BCD?style=for-the-badge&logo=sonarqube&logoColor=white)
+[![Website](https://img.shields.io/badge/WEBSITE-sonar--scan.elevatech.xyz-ff6b6b?style=for-the-badge&logo=firefox&logoColor=white)](https://sonar-scan.elevatech.xyz/)
 
 ![Style](https://img.shields.io/badge/STYLE-RETRO%20TERMINAL-ff00ff?style=for-the-badge&logo=matrix&logoColor=white)
 ![Zero Setup](https://img.shields.io/badge/SETUP-ZERO%20CONFIG-00ffff?style=for-the-badge&logo=lightning&logoColor=black)
@@ -462,6 +463,10 @@ of this software and associated documentation files...
 ```
 
 **[⬆ BACK TO TOP](#)**
+
+---
+
+**Website:** https://sonar-scan.elevatech.xyz/
 
 ---
 
