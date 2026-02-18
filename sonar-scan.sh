@@ -20,6 +20,16 @@ TARGET_DIR=""
 ACTION=""
 QUIET_MODE=false
 
+# Trap handler for cleanup on script interruption
+cleanup_on_interrupt() {
+    echo ""
+    echo -e "${YELLOW}⚠ Interrupted! Cleaning up...${NC}"
+    docker rm -f sonar-scanner-cli >/dev/null 2>&1
+    docker rm -f sonarqube >/dev/null 2>&1
+    exit 130
+}
+trap cleanup_on_interrupt INT TERM
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  C O L O R   M A T R I X
 # ══════════════════════════════════════════════════════════════════════════════
@@ -375,7 +385,16 @@ run_scan() {
     
     cyber_echo "DEPLOY" "Starting scanner..."
     echo ""
-    
+
+    # Remove any stale scanner container before starting fresh scan
+    if docker ps -a --format '{{.Names}}' | grep -q '^sonar-scanner-cli$'; then
+        docker rm -f sonar-scanner-cli >/dev/null 2>&1
+    fi
+
+    # Pull latest scanner image to ensure we have up-to-date version
+    cyber_echo "DEPLOY" "Pulling latest sonar-scanner-cli image..."
+    docker pull sonarsource/sonar-scanner-cli >/dev/null 2>&1
+
     docker run --rm \
         --network host \
         -v "$target_dir:/usr/src" \
